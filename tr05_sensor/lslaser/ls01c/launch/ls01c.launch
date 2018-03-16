@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="tf" type="static_transform_publisher" name="broadcaster_laser_map"
+     args="0.26 0 0 3.1416 0 0 /base_link /laser_link 100" />
+    
+    <arg name="laser_port" default="/dev/leishen" />
+    <node name="ls01c_node" pkg="ls01c" type="ls01c">
+	<param name="laser_port" value="$(arg laser_port)" />
+    </node>
+</launch>

@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="use_sim_time" value="false" />
+    
+    <!-- start up tr10 driver -->
+    
+    <include file="$(find tr05_controller)/launch/tr05_minimal.launch" />
+    
+
+    <!-- laser leishen -->
+    <!-- ls01c -->
+    <!--
+    <include file="$(find ls01c)/launch/ls01c.launch">
+    </include>
+    -->
+    <!-- ls01d -->
+    
+    <include file="$(find ls01d)/launch/ls01d.launch">
+    </include>
+    
+
+    <!-- astra RGB-D -->
+    <!--      
+    <include file="$(find tr05_launch)/launch/rgbd_astra.launch">
+    </include>
+    -->
+
+    <!-- kinect RGB-D -->
+    <!--
+    <include file="$(find tr05_launch)/launch/rgbd_kinect.launch">
+    </include>
+    -->
+
+    <!-- hector mapping -->
+    <!--   
+    <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping">
+    </node>
+    -->
+
+    <!-- gmapping for laser scan -->
+    <!--
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" />
+    -->
+
+    <!-- In the RGB-D case, to decrease the calculate load of board,
+ 	 it's better start up gmapping on pc -->
+    <!-- gmapping for rgbd -->
+    
+    <arg name="scan_topic" default="scan" />
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" >
+        <param name="odom_frame" value="odom"/>
+        <param name="map_update_interval" value="5.0"/>
+
+        <param name="maxRange" value="3.5"/>
+        <param name="maxUrange" value="2.8"/>
+        <param name="sigma" value="0.05"/>
+        <param name="kernelSize" value="1"/>
+        <param name="lstep" value="0.05"/>
+        <param name="astep" value="0.05"/>
+        <param name="iterations" value="5"/>
+        <param name="lsigma" value="0.075"/>
+        <param name="ogain" value="3.0"/>
+        <param name="lskip" value="0"/>
+        <param name="srr" value="0.01"/>
+        <param name="srt" value="0.02"/>
+        <param name="str" value="0.01"/>
+        <param name="stt" value="0.02"/>
+        <param name="linearUpdate" value="0.5"/>
+        <param name="angularUpdate" value="0.436"/>
+        <param name="temporalUpdate" value="-1.0"/>
+        <param name="resampleThreshold" value="0.5"/>
+        <param name="particles" value="80"/>
+
+        <param name="xmin" value="-10.0"/>
+        <param name="ymin" value="-10.0"/>
+        <param name="xmax" value="10.0"/>
+        <param name="ymax" value="10.0"/>
+
+        <param name="delta" value="0.05"/>
+        <param name="llsamplerange" value="0.01"/>
+        <param name="llsamplestep" value="0.01"/>
+        <param name="lasamplerange" value="0.005"/>
+        <param name="lasamplestep" value="0.005"/>
+        <remap from="scan" to="$(arg scan_topic)"/>
+    </node>
+    
+
+    <!-- move_base -->
+    <!--
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" clear_params="true"> 
+        <rosparam file="$(find tr05_launch)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find tr05_launch)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find tr05_launch)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find tr05_launch)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find tr05_launch)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+    -->
+
+</launch>
+
