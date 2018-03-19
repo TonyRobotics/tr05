@@ -21,7 +21,7 @@ obstacle_layer:
 range_sensor_layer:
   topics: ["/ultrasound0", "/ultrasound1", "/ultrasound2", "/ultrasound3"]
   no_readings_timeout: 0.0
-  clear_threshold: 0.3
-  mark_threshold: 0.6
+  clear_threshold: 0.01
+  mark_threshold: 0.1
   clear_on_max_reading: true
 
