@@ -1,26 +1,20 @@
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 cmake_minimum_required(VERSION 2.8.3)
-project(mqtt_client)
+project(mqtt_sub)
+
+## Compile as C++11, supported in ROS Kinetic and newer
+# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  tf
-  laser_geometry
-  nav_msgs
   roscpp
-  std_msgs
-  move_base_msgs
-  actionlib_msgs
-  patrol_msgs
 )
 
 ## System dependencies are found with CMake's conventions
-find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Boost REQUIRED COMPONENTS system)
 
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -75,7 +69,7 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   nav_msgs#   std_msgs
+#   std_msgs  # Or other packages containing msgs
 # )
 
 ################################################
@@ -103,14 +97,14 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 ###################################
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
+## INCLUDE_DIRS: uncomment this if your package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES mqtt_client
-#  CATKIN_DEPENDS nav_msgs roscpp std_msgs
+#  LIBRARIES mqtt_sub
+#  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
 
@@ -120,33 +114,45 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
 include_directories(
+# include
   ${catkin_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(mqtt_client
-#   src/${PROJECT_NAME}/mqtt_client.cpp
+# add_library(${PROJECT_NAME}
+#   src/${PROJECT_NAME}/mqtt_sub.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(mqtt_client ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(mqtt_client_node src/mqtt_client_node.cpp)
+## With catkin_make all packages are built within a single CMake context
+## The recommended prefix ensures that target names across packages don't collide
+add_executable(${PROJECT_NAME}_node src/mqtt_sub_node.cpp)
+
+## Rename C++ executable without prefix
+## The above recommended prefix causes long target names, the following renames the
+## target back to the shorter version for ease of user use
+## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
+# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(mqtt_client_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(mqtt_client_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_node
+  libpaho-mqttpp3.so
+  libpaho-mqtt3a.so
+  libpaho-mqtt3as.so  
+  libpaho-mqtt3c.so
+  libpaho-mqtt3cs.so
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
@@ -163,7 +169,7 @@ include_directories(
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS mqtt_client mqtt_client_node
+# install(TARGETS ${PROJECT_NAME} ${PROJECT_NAME}_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -188,37 +194,10 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_mqtt_client.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_mqtt_sub.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-
-add_executable(mqtt_client_pub src/mqtt_client_pub.cpp)
-target_link_libraries(mqtt_client_pub ${catkin_LIBRARIES}
-libmqttpp.so
-libpaho-mqtt3a.so
-libpaho-mqtt3as.so  
-libpaho-mqtt3c.so
-libpaho-mqtt3cs.so
-${Boost_LIBRARIES}
-)
-
-add_executable(task_man_node
-  src/task_man_node.cpp
-)
-add_dependencies(task_man_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(task_man_node ${catkin_LIBRARIES})
-
-add_executable(patrol_task_pub src/patrol_task_pub.cpp)
-target_link_libraries(patrol_task_pub ${catkin_LIBRARIES}
-libmqttpp.so
-libpaho-mqtt3a.so
-libpaho-mqtt3as.so  
-libpaho-mqtt3c.so
-libpaho-mqtt3cs.so
-${Boost_LIBRARIES}
-)
-
