@@ -11,7 +11,7 @@
   <arg name="base_width" default="0.25" />
   <arg name="wheel_diameter" default="0.08" />
 
-  <node pkg="tr05_controller" type="trd_diff_controller_node" name="trd_diff_controller_node">
+  <node pkg="tr05_controller" type="trd_driver.py" name="trd_diff_controller_node">
     <param name="serialport_name" value="$(arg serialport_name)"/>
     <param name="baudrate" value="$(arg baudrate)"/>
     <param name="left_coef" value="$(arg left_coef)" />
