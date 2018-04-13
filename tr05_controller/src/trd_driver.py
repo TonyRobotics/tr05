@@ -165,6 +165,8 @@ class DriverNode():
                 (encoder1 - self.encoder1_prev) / self.encoder_ticks_per_rev
         dright = self.right_coef * math.pi * self.wheel_diameter * \
                 (encoder2 - self.encoder2_prev) / self.encoder_ticks_per_rev
+        self.encoder1_prev = encoder1
+        self.encoder2_prev = encoder2
         d = (dleft + dright) / 2
         dtheta = (dright - dleft) / self.base_width
         if d != 0:
