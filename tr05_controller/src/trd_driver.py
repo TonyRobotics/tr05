@@ -59,7 +59,7 @@ class TRDSerialDriver():
         cmd = [0xea, 0x03, 0x50, 0x00, 0x0d]
         self.send_cmd(cmd)
         time.sleep(3)
-        print('Reset Base:', self.get_response(9))
+        print('Reset Base:', self.get_response(12))
 
     def reset_encoder(self):
         cmd = [0xea, 0x03, 0x35, 0x00, 0x0d]
