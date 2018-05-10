@@ -122,7 +122,7 @@ class DriverNode():
         self.base_width = rospy.get_param('~base_width', default=0.39)
         self.wheel_diameter = rospy.get_param('~wheel_diameter', default=0.125)
         self.pub_odom = rospy.Publisher('/odom', Odometry, queue_size=10)
-        self.sub_vel = rospy.Subscriber('/cmd_vel', Twist, self.vel_callback)
+        self.sub_vel = rospy.Subscriber('/cmd_vel', Twist, self.vel_callback, queue_size=1)
         self.tf_broadcaster = tf.TransformBroadcaster()
         self.encoder1_prev = 0
         self.encoder2_prev = 0
