@@ -36,8 +36,9 @@
     </include>
     -->
 
-    <node pkg="map_server" type="map_server" name="map_server"
-        args="$(find tr05_navigation)/maps/mymap2.yaml" />
+    <!-- map_server now managed by user or application service -->
+    <!-- <node pkg="map_server" type="map_server" name="map_server"
+        args="$(find tr05_navigation)/maps/mymap2.yaml" /> -->
 
     <node pkg="amcl" type="amcl" name="amcl" >
         <remap from="scan" to="scan" />
